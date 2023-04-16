@@ -1,0 +1,27 @@
+{%extends 'base.html'%}
+
+
+{%block title%}
+login
+{%endblock%}
+{%block content%}
+   {%if messages%}
+   <section class='messages-section'>
+     <ul class='messages'>
+       {%for message in messages%}
+       <li {% if message.tags%} class='{{message.tags}}' {%endif%}>{{message}}</li>
+       {%endfor%}
+     </ul>
+   </section>
+   {%endif%}
+    <section id="login">
+      <div class="auth-container">
+        <h2>Login</h2>
+        <form method='post'>
+          {%csrf_token%}
+          {{form.as_p}}
+          <input type="submit" value="Login">
+        </form>
+      </div>
+    </section>
+{%endblock%}
