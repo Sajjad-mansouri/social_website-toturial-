@@ -146,3 +146,10 @@ EMAIL_PORT=config('EMAIL_PORT')
 
 MEDIA_ROOT=BASE_DIR/'media'
 MEDIA_URL='media/'
+
+
+
+AUTHENTICATION_BACKENDS =[
+"django.contrib.auth.backends.ModelBackend",
+'account.authentication.EmailAuthBackend'
+]
