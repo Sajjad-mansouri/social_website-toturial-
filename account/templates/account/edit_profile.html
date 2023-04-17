@@ -2,7 +2,7 @@
 
 
 {%block title%}
-login
+edit
 {%endblock%}
 {%block content%}
    {%if messages%}
@@ -14,16 +14,14 @@ login
      </ul>
    </section>
    {%endif%}
-    <section id="login">
+    <section id="edit">
       <div class="auth-container">
-        <h2>Login</h2>
-        <form method='post'>
+        <h2>Edit</h2>
+        <form method='post' enctype='multipart/form-data' >
           {%csrf_token%}
+          {{user_form.as_p}}
           {{form.as_p}}
-          <input type="submit" value="Login">
-          <a href="{% url 'password_reset'%}">forgot password?</a>
-          <a href="{% url 'register'%}">do you have account?</a>
-
+          <input type="submit" value="submit">
         </form>
       </div>
     </section>

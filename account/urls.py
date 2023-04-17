@@ -4,6 +4,10 @@ from . import views
 
 urlpatterns=[
 	path('dashboard/',views.dashboard,name='dashboard'),
+	path('register/',views.register,name='register'),
+	path('create_profile/',views.create_profile,name='create_profile'),
+	path('edit_profile/',views.edit_profile,name='edit_profile')
+
 	
 	#path('login/',views.login,name='login')
 	# path('login/',auth_views.LoginView.as_view(),name='login'),
