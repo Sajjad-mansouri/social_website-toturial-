@@ -44,3 +44,12 @@ nav li {
 nav a {
   color: #fff;
  
+}
+.image {
+  display: inline-block;
+}
+section.form{
+  width: 400px;
+    float: right;
+
+}

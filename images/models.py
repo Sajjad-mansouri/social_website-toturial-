@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from django.urls import reverse_lazy
 from django.conf import settings
 class Image(models.Model):
 	user=models.ForeignKey(settings.AUTH_USER_MODEL,related_name='images_created',on_delete=models.CASCADE)
@@ -20,3 +21,6 @@ class Image(models.Model):
 
 		return super().save(*args,**kwargs)
 
+
+	def get_absolute_url(self):
+		return reverse_lazy('image_create')

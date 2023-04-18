@@ -10,7 +10,7 @@ class EmailAuthBackend(object):
 			if user.check_password(password):
 				return user
 			
-			return Nodne
+			return None
 		except User.DoesNotExist:
 			return None
 
