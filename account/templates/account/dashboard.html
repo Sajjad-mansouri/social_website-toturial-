@@ -12,6 +12,8 @@ dashboar:{{request.user}}
 <a href="{%url 'edit_profile'%}">edit profile</a>
 <p>drage to    <a href="javascript:{% include 'bookmarklet_launcher.js' %}" class="button">Bookmark it</a></p>
     </section>
-
+    {%with total_bookmarked=request.user.images_created.count%}
+<p>{{total_bookmarked}} image{{total_bookmarked|pluralize}} bookmarked</p>
+{%endwith%}
 {%endblock%}
 
