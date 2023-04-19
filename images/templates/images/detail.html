@@ -1,0 +1,32 @@
+{%extends 'base.html'%}
+
+
+{%block title%}
+
+
+{%endblock%}
+
+{%block content%}
+
+<h1>{{image.title}}</h1>
+<img src="{{image.image.url}}" width=100>
+{% with total_like=image.like_image.count %}
+<div class='info'>
+	<div>
+		<span>{{total_like}} like{{totla_like|pluralize}}</span>
+	</div>
+	<p>{{image.description}}</p>
+</div>
+<div class='like'>
+	{% for user in image.like_image.all %}
+	<div>
+		<img src="{{user.profile.image.url}}" width=30 height=30 style="border-radius: 50%;">
+		<p>{{user.first_name}}</p>
+	</div>
+	{%empty%}
+	No body like it
+	{% endfor%}
+
+</div>
+{%endwith%}
+{%endblock%}

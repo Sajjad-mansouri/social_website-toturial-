@@ -23,4 +23,4 @@ class Image(models.Model):
 
 
 	def get_absolute_url(self):
-		return reverse_lazy('image_create')
+		return reverse('detail',args=[self.id,self.slug])
