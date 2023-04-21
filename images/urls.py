@@ -4,5 +4,6 @@ from . import views
 urlpatterns=[
 path('create/',views.image_create,name='image_create'),
 path('detail/<int:id>/<slug:slug>/',views.detail,name='detail'),
+path('detail/like/',views.like,name='like')
 
 ]
