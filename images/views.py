@@ -6,7 +6,7 @@ from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from .models import Image
 from .forms import ImageCreateForm
-
+from common.decorators import ajax_required
 
 
 @login_required
@@ -33,6 +33,7 @@ def detail(request,id,slug):
 	image=get_object_or_404(Image,id=id,slug=slug)
 	return render(request,'images/detail.html',{'image':image})
 
+@ajax_required
 @login_required
 @require_POST
 def like(request):
@@ -46,7 +47,7 @@ def like(request):
 			user=request.user
 			if action == 'like':
 				image.like_image.add(request.user)
-				print(image.like_image.all())
+				
 			else:
 				image.like_image.remove(request.user)
 				
