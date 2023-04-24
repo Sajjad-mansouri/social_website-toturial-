@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy,reverse
 from django.conf import settings
 class Image(models.Model):
 	user=models.ForeignKey(settings.AUTH_USER_MODEL,related_name='images_created',on_delete=models.CASCADE)

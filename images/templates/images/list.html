@@ -1,0 +1,56 @@
+{%extends 'base.html'%}
+
+
+{%block title%}
+images
+{%endblock%}
+
+{%block content%}
+<div class="image-list">
+{% include 'images/list_ajax.html'%}
+
+</div>
+{%endblock%}
+
+
+
+
+{% block domready%}
+
+var page=1;
+var empty=false;
+var block_request=false
+$(window).scroll(function(){
+	var margin= $(document).height() -$(window).height()-200;
+	var position=$(document).scrollTop();
+	
+	if(position>margin && empty==false && block_request==false){
+			block_request=true;
+			page +=1;
+			 $.ajax({
+				url: '?page='+page,
+				type: 'GET',
+				
+				})
+			  .done(function(response) {
+
+			  	if(response==''){
+			  		empty=true
+			  	}
+			  	else{
+			  		block_request=false;
+			  		$('.image-list').append(response);
+			  	}
+			  	
+			  })
+			  
+	};
+
+	});					
+
+
+
+
+{% endblock %}
+
+

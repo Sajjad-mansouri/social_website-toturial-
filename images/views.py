@@ -3,10 +3,11 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.views.decorators.http import require_POST
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponse
+from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
 from .models import Image
 from .forms import ImageCreateForm
-from common.decorators import ajax_required
+from common.decorators import ajax_required,is_ajax
 
 
 @login_required
@@ -55,3 +56,24 @@ def like(request):
 		except:
 			pass
 	return JsonResponse({'status':'error'})
+
+
+
+@login_required
+def image_list(request):
+	images=Image.objects.all()
+	paginator=Paginator(images,2)
+	page_num=request.GET.get('page')
+	page_obj=paginator.get_page(page_num)
+	
+	try:
+			number = paginator.validate_number(page_num)
+	except PageNotAnInteger:
+			number = 1
+	except EmptyPage:
+			if is_ajax(request):
+				return HttpResponse('')
+	if is_ajax(request):
+		return render(request,'images/list_ajax.html',{'page_obj':page_obj})
+
+	return render(request,'images/list.html',{'page_obj':page_obj})
