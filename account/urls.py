@@ -6,8 +6,10 @@ urlpatterns=[
 	path('dashboard/',views.dashboard,name='dashboard'),
 	path('register/',views.register,name='register'),
 	path('create_profile/',views.create_profile,name='create_profile'),
-	path('edit_profile/',views.edit_profile,name='edit_profile')
-
+	path('edit_profile/',views.edit_profile,name='edit_profile'),
+	path('users/',views.user_list,name='user_list'),
+	path('user/<username>/',views.user_detail,name='user_detail'),
+	path('follow/user/',views.user_follow,name='user_follow')
 	
 	#path('login/',views.login,name='login')
 	# path('login/',auth_views.LoginView.as_view(),name='login'),

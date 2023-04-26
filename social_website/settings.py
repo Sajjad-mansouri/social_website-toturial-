@@ -191,3 +191,10 @@ LOGGING = {
         },
     },
 }
+
+
+
+
+ABSOLUTE_URL_OVERRIDES={
+    'auth.user':lambda obj:reverse_lazy('user_detail',args=[obj.username])
+}

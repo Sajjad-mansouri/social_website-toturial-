@@ -1,0 +1,64 @@
+{%extends 'base.html'%}
+
+
+
+{%block content%}
+
+<div style="display:inline-block;">
+	
+	<img src="{{account_user.profile.image.url}}" width=200 height=200 style="border-radius: 50%;">
+	<h1>{{account_user.first_name}}</h1>
+	{%with followings_count=account_user.following.count%}
+
+	<span class="count">
+	<span class="total-following">{{ followings_count}}</span>
+	follower{{ followings_count|pluralize }}
+	</span>
+	
+	{%endwith%}
+	{%with followers_count=account_user.followers.count%}
+	
+	<span class="count">
+	<span class="total-follower" >{{followers_count}}</span>
+	follower{{ followers_count|pluralize }}
+	</span>
+	{%endwith%}
+	<a href="#" title="" id='follow-link' data-action='{%if request.user in account_user.followers.all%}unfollow {%else%} follow {%endif%}' >{%if request.user in account_user.followers.all%}unfollow {%else%} follow {%endif%}</a>
+
+
+</div>
+
+	<hr>
+	{% include 'images/list_ajax.html' with page_obj=account_user.images_created.all %}
+	
+		
+		
+{%endblock%}
+
+
+{%block domready%}
+var action=$('#follow-link').data('action')
+
+$('#follow-link').on('click',function(e){
+	e.preventDefault();
+	$.ajax({
+		url:"{%url 'user_follow'%}",
+		method:'POST',
+		data:{'username':'{{account_user.username}}',
+				}
+	}).done(function(response){
+		if(response['status']=='ok'){
+		var action =response['action'];
+		var previous_follower=parseInt($('.total-follower').text());
+		$('#follow-link').html(action=='follow'?'unfollow':'follow')
+		$('.total-follower').html(action=='follow'?previous_follower+1:previous_follower-1)
+		}
+		
+		
+
+	})
+
+})
+
+
+{%endblock%}

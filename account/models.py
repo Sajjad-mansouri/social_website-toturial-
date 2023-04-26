@@ -12,14 +12,14 @@ class Profile(models.Model):
 
 
 class Contact(models.Model):
-	user_to=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='rel_to')
 	user_from=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='rel_from')
-	created=models.DateTimeField(auto_now_add=True)
+	following=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='rel_to')
+	created=models.DateTimeField(auto_now_add=True,db_index=True)
 
 	class Meta:
 		ordering=['-created']
 	def __str__(self):
-		return f'{self.user_from} follow {self.user_to}'
+		return f'{self.user_from} follow {self.following}'
 
 
 

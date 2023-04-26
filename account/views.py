@@ -1,10 +1,13 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate,login as auth_login
 from django.contrib import messages
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
 from .forms import LoginForm,RegisterForm,EditProfileForm,EditUserForm
 from django.contrib.auth.models import User
-from .models import Profile
+from .models import Profile,Contact
+from common.decorators import ajax_required
 
 
 def login(request):
@@ -45,6 +48,8 @@ def register(request):
 	form=RegisterForm()
 	return render(request,'registration/signup.html',{'form':form})
 
+
+@login_required
 def create_profile(request):
 	if request.method=='POST':
 		form=EditProfileForm(data=request.POST, files=request.FILES)
@@ -57,6 +62,9 @@ def create_profile(request):
 
 
 	return render(request,'account/edit_profile.html',{'form':form})
+
+	
+@login_required	
 def edit_profile(request):
 	# user_instance=User.objects.get(pk=request.user.id)
 	# profile_instance=Profile.objects.get(user=user_instance)
@@ -77,3 +85,34 @@ def edit_profile(request):
 
 
 	return render(request,'account/edit_profile.html',{'form':profile,'user_form':user_form})
+
+
+
+@login_required	
+def user_list(request):
+	users=User.objects.filter(is_active=True)
+	return render(request,'account/user/user_list.html',{'users':users})
+
+@login_required	
+def user_detail(request,username):
+	account_user=get_object_or_404(User,username=username)
+	return render(request,'account/user/user_detail.html',{'account_user':account_user})
+
+@ajax_required
+@require_POST
+@login_required
+def user_follow(request):
+	active_user=request.user
+	following_username=request.POST.get('username')
+	try:
+			following=User.objects.get(username=following_username)
+			if following.username not in active_user.following.values_list('username',flat=True):
+				Contact.objects.create(user_from=active_user,following=following)
+				return JsonResponse({'status':'ok','action':'follow'})
+			else:
+				active_user.following.remove(following)
+				return JsonResponse({'status':'ok','action':'unfollow'})
+	except User.DoesNotExist:
+		return JsonResponse({'status':'error'})
+	
+
