@@ -8,6 +8,8 @@ from .forms import LoginForm,RegisterForm,EditProfileForm,EditUserForm
 from django.contrib.auth.models import User
 from .models import Profile,Contact
 from common.decorators import ajax_required
+from actions.utils import create_action
+from actions.models import Action
 
 
 def login(request):
@@ -30,7 +32,12 @@ def login(request):
 
 @login_required
 def dashboard(request):
-	return render(request,'account/dashboard.html')
+	actions=Action.objects.exclude(user=request.user)
+	following_ids=request.user.following.values_list('id',flat=True)
+	if following_ids:
+		actions=actions.filter(user_id__in=following_ids)
+	actions=actions[:10]
+	return render(request,'account/dashboard.html',{'actions':actions})
 
 
 def register(request):
@@ -68,7 +75,6 @@ def create_profile(request):
 def edit_profile(request):
 	# user_instance=User.objects.get(pk=request.user.id)
 	# profile_instance=Profile.objects.get(user=user_instance)
-	print('before post')
 	if request.method=='POST':
 		profile=EditProfileForm(instance=request.user.profile,data=request.POST, files=request.FILES)
 		user_form=EditUserForm(instance=request.user,data=request.POST)
@@ -108,9 +114,12 @@ def user_follow(request):
 			following=User.objects.get(username=following_username)
 			if following.username not in active_user.following.values_list('username',flat=True):
 				Contact.objects.create(user_from=active_user,following=following)
+				create_action(request.user,'follow',following)
 				return JsonResponse({'status':'ok','action':'follow'})
 			else:
 				active_user.following.remove(following)
+				create_action(request.user,'follow',following)
+				
 				return JsonResponse({'status':'ok','action':'unfollow'})
 	except User.DoesNotExist:
 		return JsonResponse({'status':'error'})

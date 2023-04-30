@@ -8,6 +8,7 @@ from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
 from .models import Image
 from .forms import ImageCreateForm
 from common.decorators import ajax_required,is_ajax
+from actions.utils import create_action
 
 
 @login_required
@@ -19,6 +20,7 @@ def image_create(request):
 			new_form=form.save(commit=False)
 			new_form.user=request.user
 			new_form.save()
+			create_action(request.user,'bookmarked_image',new_form)
 			messages.success(request,'image added successfuly')
 			return redirect(new_form.get_absolute_url())
 	else:
@@ -48,6 +50,7 @@ def like(request):
 			user=request.user
 			if action == 'like':
 				image.like_image.add(request.user)
+				create_action(request.user,'likes',image)
 				
 			else:
 				image.like_image.remove(request.user)

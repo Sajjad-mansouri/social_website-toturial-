@@ -14,6 +14,11 @@ dashboar:{{request.user}}
     </section>
     {%with total_bookmarked=request.user.images_created.count%}
 <p>{{total_bookmarked}} image{{total_bookmarked|pluralize}} bookmarked</p>
+<h1>Actions:</h1>
+{%for action in actions%}
+<p>{{action}}</p>
+{%endfor%}
+
 {%endwith%}
 {%endblock%}
 
