@@ -3,7 +3,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate,login as auth_login
 from django.contrib import messages
 from django.views.decorators.http import require_POST
+from django.db.models import F
 from django.http import JsonResponse
+from django.db import connection
 from .forms import LoginForm,RegisterForm,EditProfileForm,EditUserForm
 from django.contrib.auth.models import User
 from .models import Profile,Contact
@@ -32,11 +34,19 @@ def login(request):
 
 @login_required
 def dashboard(request):
+
+	
+
 	actions=Action.objects.exclude(user=request.user)
 	following_ids=request.user.following.values_list('id',flat=True)
+
 	if following_ids:
-		actions=actions.filter(user_id__in=following_ids)
-	actions=actions[:10]
+		actions=actions.filter(user_id__in=following_ids,user__following__created__lt=F('created'))
+		actions=actions.select_related('user__profile').prefetch_related('target')[:10]
+	else:
+		actions=None
+	
+	
 	return render(request,'account/dashboard.html',{'actions':actions})
 
 
@@ -62,6 +72,7 @@ def create_profile(request):
 		form=EditProfileForm(data=request.POST, files=request.FILES)
 		if form.is_valid():
 			form.save()
+			create_action(request.user,'create profile')
 			messages.success(request,'successfully edited')
 
 	else:

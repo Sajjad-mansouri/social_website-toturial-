@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'images.apps.ImagesConfig',
     'django_extensions',
     'sorl.thumbnail',
-    'actions.apps.ActionsConfig'
+    'actions.apps.ActionsConfig',
+    
     
 ]
 
@@ -56,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'social_website.urls'
@@ -199,3 +201,5 @@ LOGGING = {
 ABSOLUTE_URL_OVERRIDES={
     'auth.user':lambda obj:reverse_lazy('user_detail',args=[obj.username])
 }
+
+

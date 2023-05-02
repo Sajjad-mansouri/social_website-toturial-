@@ -15,7 +15,7 @@
       
      
       {% if request.user.is_authenticated%}
-      <li>My dashboard({{request.user.username}})</li>
+      <li><a href="{%url 'dashboard'%}">My dashboard({{request.user.username}})</a></li>
       <li><a href="{%url 'image-list'%}">image</a></li>
       <li><a href="{%url 'user_list'%}">people</a></li>
       <li><a href="{%url 'logout'%}">Logout</a></li>
