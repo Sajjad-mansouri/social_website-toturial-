@@ -65,6 +65,7 @@ def like(request):
 @login_required
 def image_list(request):
 	images=Image.objects.all()
+	#popularity_image=Image.objects.order_by('-total_likes')
 	paginator=Paginator(images,2)
 	page_num=request.GET.get('page')
 	page_obj=paginator.get_page(page_num)
