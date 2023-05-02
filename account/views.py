@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate,login as auth_login
 from django.contrib import messages
 from django.views.decorators.http import require_POST
-from django.db.models import F
+from django.db.models import F,Subquery,OuterRef
 from django.http import JsonResponse
 from django.db import connection
 from .forms import LoginForm,RegisterForm,EditProfileForm,EditUserForm
@@ -41,7 +41,10 @@ def dashboard(request):
 	following_ids=request.user.following.values_list('id',flat=True)
 
 	if following_ids:
-		actions=actions.filter(user_id__in=following_ids,user__following__created__lt=F('created'))
+		following_created=Contact.objects.filter(following=OuterRef('user_id')).order_by('-created').values('created')[:1]
+
+		actions=actions.filter(user_id__in=following_ids,created__gt=Subquery(following_created))
+		print(actions)
 		actions=actions.select_related('user__profile').prefetch_related('target')[:10]
 	else:
 		actions=None
