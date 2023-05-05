@@ -5,10 +5,15 @@ from django.contrib import messages
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse,HttpResponse
 from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
+import redis
+from django.conf import settings
 from .models import Image
 from .forms import ImageCreateForm
 from common.decorators import ajax_required,is_ajax
 from actions.utils import create_action
+
+#connect to redis 
+#r=redis.Redis(host=settings.REDIS_HOST,port=settings.REDIS_PORT,db=settings.REDIS_DB)
 
 
 @login_required
@@ -34,7 +39,11 @@ def image_create(request):
 def detail(request,id,slug):
 
 	image=get_object_or_404(Image,id=id,slug=slug)
+	#increament total image view with redis:
+	#total_view=r.incr(f'image:{image.id}:views')
+	#return render(request,'images/detail.html',{'image':image,'total_view':total_view})
 	return render(request,'images/detail.html',{'image':image})
+
 
 @ajax_required
 @login_required

@@ -12,6 +12,14 @@
 {% thumbnail image.image "200x200" crop="center" as im %}
 	<img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
 {% endthumbnail %}
+
+<!-- 
+	view counter with redis:
+<span class="total_view">
+	{{total_view}} view{{total_view|pluralize}}
+</span> 
+-->
+
 {% with total_like=image.like_image.count  users=image.like_image.all%}
 <div class='info'>
 	<div>
