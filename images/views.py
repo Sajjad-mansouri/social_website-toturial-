@@ -41,6 +41,7 @@ def detail(request,id,slug):
 	image=get_object_or_404(Image,id=id,slug=slug)
 	#increament total image view with redis:
 	#total_view=r.incr(f'image:{image.id}:views')
+	#r.zincrby('image-ranking',1,image.id)
 	#return render(request,'images/detail.html',{'image':image,'total_view':total_view})
 	return render(request,'images/detail.html',{'image':image})
 
@@ -90,3 +91,12 @@ def image_list(request):
 		return render(request,'images/list_ajax.html',{'page_obj':page_obj})
 
 	return render(request,'images/list.html',{'page_obj':page_obj})
+
+
+@login_required
+def image_ranking(request):
+	image_rangking=r.zrange('image-ranking',0,-1,desc=True)[0:10]
+	image_ranking_id=list(int(id) for id in image_ids)
+	most_view=list(Image.objects.filter(id__in=ids_list))
+	most_view.sort(lambda:x:image_ranking_id.index(x.id))
+	return render(request,'images/most_viewed.html',{'section':'most_viewed','most_viewed':most_view})

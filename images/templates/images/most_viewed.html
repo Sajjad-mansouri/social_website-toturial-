@@ -1,0 +1,11 @@
+{%extends 'base.html'%}
+
+
+{%block content%}
+{%for image in most_viewd%}
+<ol>
+	<li><a href="{{image.get_absolute_url}}" >{{image.title}}</a> </li>
+</ol>
+
+{%endfor%}
+{%endblock%}
